@@ -1,3 +1,7 @@
+# Why the fork?
+I'm currently reading up on Azure Service Fabric and how to build a Microservices solution using RabbitMQ and MassTransit sagas into it.
+EdwinVW's case has all the required logic build, but the difference in my approach is switching from Docker and Docker Compose to Azure Service Fabric and add MassTransit in the mix primairily to be able to do sagas.
+
 # Pitstop - Garage Management System
 This repo contains a sample application based on a Garage Management System for PitStop - a fictitious garage. The application targets the employees of PitStop and supports their daily tasks. It should offer the following functionality:
 
