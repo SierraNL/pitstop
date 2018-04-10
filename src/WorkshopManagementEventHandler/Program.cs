@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.ServiceFabric.Services.Runtime;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.WorkshopManagementEventHandler.DataAccess;
 using Polly;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -27,50 +29,55 @@ namespace Pitstop.WorkshopManagementEventHandler
                 .Build();
         }
 
-        static void Main(string[] args)
+        /// <summary>
+        /// This is the entry point of the service host process.
+        /// </summary>
+        private static void Main()
         {
-            Startup();
-        }
+            try
+            {
+                // The ServiceManifest.XML file defines one or more service type names.
+                // Registering a service maps a service type name to a .NET type.
+                // When Service Fabric creates an instance of this service type,
+                // an instance of the class is created in this host process.
 
-        private static void Startup()
-        {
-            // setup RabbitMQ
-            var configSection = Config.GetSection("RabbitMQ");
-            string host = configSection["Host"];
-            string userName = configSection["UserName"];
-            string password = configSection["Password"];
+                ServiceRuntime.RegisterServiceAsync("WorkshopManagementEventHandlerType",
+                    context => new WorkshopManagementEventHandler(context)).GetAwaiter().GetResult();
 
-            // setup messagehandler
-            RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Pitstop", "WorkshopManagement", "");
+                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(WorkshopManagementEventHandler).Name);
 
-            // setup DBContext
-            var sqlConnectionString = Config.GetConnectionString("WorkshopManagementCN");
-            var dbContextOptions = new DbContextOptionsBuilder<WorkshopManagementDBContext>()
-                .UseSqlServer(sqlConnectionString)
-                .Options;
-            var dbContext = new WorkshopManagementDBContext(dbContextOptions);
+                // get configuration
+                var rabbitMQConfigSection = Config.GetSection("RabbitMQ");
+                string host = rabbitMQConfigSection["Host"];
+                string userName = rabbitMQConfigSection["UserName"];
+                string password = rabbitMQConfigSection["Password"];
 
-            Policy
+                // setup messagehandler
+                RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Pitstop", "WorkshopManagement", "");
+
+                // setup DBContext
+                var sqlConnectionString = Config.GetConnectionString("WorkshopManagementCN");
+                var dbContextOptions = new DbContextOptionsBuilder<WorkshopManagementDBContext>()
+                    .UseSqlServer(sqlConnectionString)
+                    .Options;
+                var dbContext = new WorkshopManagementDBContext(dbContextOptions);
+
+                Policy
                 .Handle<Exception>()
                 .WaitAndRetry(5, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.WriteLine("Error connecting to DB. Retrying in 5 sec."); })
                 .Execute(() => DBInitializer.Initialize(dbContext));
 
-            // start event-handler
-            EventHandler eventHandler = new EventHandler(messageHandler, dbContext);
-            eventHandler.Start();
+                // start event-handler
+                EventHandler eventHandler = new EventHandler(messageHandler, dbContext);
+                eventHandler.Start();
 
-            if (_env == "Development")
-            {
-                Console.WriteLine("WorkshopManagement EventHandler started. Press any key to stop...");
-                Console.ReadKey(true);
-                eventHandler.Stop();
+                // Prevents this host process from terminating so services keep running.
+                Thread.Sleep(Timeout.Infinite);
             }
-            else
+            catch (Exception e)
             {
-                while (true)
-                {
-                    Thread.Sleep(10000);
-                }
+                ServiceEventSource.Current.ServiceHostInitializationFailed(e.ToString());
+                throw;
             }
         }
     }

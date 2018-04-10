@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="PitstopType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="SqlServer_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="RabbitMQ_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="WebApp_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="AuditlogService_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="CustomerManagementAPI_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="InvoiceService_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="NotificationService_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="TimeService_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="VehicleManagementAPI_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="WorkshopManagementAPI_InstanceCount" DefaultValue="-1" />
+    <Parameter Name="WorkshopManagementEventHandler_InstanceCount" DefaultValue="-1" />
+  </Parameters>
+  <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
+       should match the Name and Version attributes of the ServiceManifest element defined in the 
+       ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="SqlServerPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+    <Policies>
+      <ContainerHostPolicies CodePackageRef="Code">
+        <PortBinding ContainerPort="1433" EndpointRef="SqlServerTypeEndpoint" />
+      </ContainerHostPolicies>
+    </Policies>
+  </ServiceManifestImport>
+  <!--
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="InvoiceServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="NotificationServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="TimeServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+    -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="VehicleManagementAPIPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="WorkshopManagementAPIPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="WorkshopManagementEventHandlerPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="WebAppPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="CustomerManagementAPIPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="AuditlogServicePkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="RabbitMQPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+    <Policies>
+      <ContainerHostPolicies CodePackageRef="Code">
+        <PortBinding ContainerPort="5672" EndpointRef="RabbitMQTypeEndpoint" />
+      </ContainerHostPolicies>
+    </Policies>
+  </ServiceManifestImport>
+  <DefaultServices>
+    <!-- The section below creates instances of service types, when an instance of this 
+         application type is created. You can also create one or more instances of service type using the 
+         ServiceFabric PowerShell module.  
+		 
+		 WebApp
+		AuditlogService
+		CustomerManagementAPI
+		InvoiceService
+		NotificationService
+		TimeService
+		VehicleManagementAPI
+		WorkshopManagementAPI
+		WorkshopManagementEventHandler
+		 
+         The attribute ServiceTypeName below must match the name defined in the imported ServiceManifest.xml file. -->
+    <Service Name="SqlServer" ServiceDnsName="sqlserver.pitstop" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="SqlServerType" InstanceCount="[SqlServer_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="RabbitMQ" ServiceDnsName="rabbitmq.pitstop" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="RabbitMQType" InstanceCount="[RabbitMQ_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="WebApp" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="WebAppType" InstanceCount="[WebApp_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="AuditlogService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="AuditlogServiceType" InstanceCount="[AuditlogService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="CustomerManagementAPI" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="CustomerManagementAPIType" InstanceCount="[CustomerManagementAPI_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <!--
+    <Service Name="InvoiceService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="InvoiceServiceType" InstanceCount="[InvoiceService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="NotificationService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="NotificationServiceType" InstanceCount="[NotificationService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="TimeService" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="TimeServiceType" InstanceCount="[TimeService_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    -->
+    <Service Name="VehicleManagementAPI" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="VehicleManagementAPIType" InstanceCount="[VehicleManagementAPI_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="WorkshopManagementAPI" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="WorkshopManagementAPIType" InstanceCount="[WorkshopManagementAPI_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+    <Service Name="WorkshopManagementEventHandler" ServicePackageActivationMode="ExclusiveProcess">
+      <StatelessService ServiceTypeName="WorkshopManagementEventHandlerType" InstanceCount="[WorkshopManagementEventHandler_InstanceCount]">
+        <SingletonPartition />
+      </StatelessService>
+    </Service>
+  </DefaultServices>
+</ApplicationManifest>

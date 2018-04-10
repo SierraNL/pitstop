@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "pitstop", "Pitstop\pitstop.sfproj", "{068E115D-50C9-4C98-BD61-DA47624B3D7C}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VehicleManagementAPI", "VehicleManagementAPI\VehicleManagementAPI.csproj", "{9C0B9864-8CF3-4352-A84C-BC0521668BCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E6C719C-89BB-4C83-BA00-AFECD9EA4671}"
@@ -10,14 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		ClearDatabases.sql = ClearDatabases.sql
 		docker-compose.yml = docker-compose.yml
 		nuget.config = nuget.config
-		RebuildAllDockerImages.ps1 = RebuildAllDockerImages.ps1
-		RebuildAllDockerImages.sh = RebuildAllDockerImages.sh
-		RemoveUnusedImages.ps1 = RemoveUnusedImages.ps1
-		RemoveUnusedImages.sh = RemoveUnusedImages.sh
-		RunAllDockerImages.ps1 = RunAllDockerImages.ps1
-		RunAllDockerImages.sh = RunAllDockerImages.sh
-		StopAndRemoveAllContainers.ps1 = StopAndRemoveAllContainers.ps1
-		StopAndRemoveAllContainers.sh = StopAndRemoveAllContainers.sh
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{2E6B2542-F16F-40B8-93DC-2253EC90971A}"
@@ -48,6 +42,16 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Debug|Any CPU.ActiveCfg = Debug|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Debug|x64.ActiveCfg = Debug|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Debug|x64.Build.0 = Debug|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Debug|x64.Deploy.0 = Debug|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Debug|x86.ActiveCfg = Debug|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Release|Any CPU.ActiveCfg = Release|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Release|x64.ActiveCfg = Release|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Release|x64.Build.0 = Release|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Release|x64.Deploy.0 = Release|x64
+		{068E115D-50C9-4C98-BD61-DA47624B3D7C}.Release|x86.ActiveCfg = Release|x64
 		{9C0B9864-8CF3-4352-A84C-BC0521668BCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9C0B9864-8CF3-4352-A84C-BC0521668BCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C0B9864-8CF3-4352-A84C-BC0521668BCB}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -123,7 +127,6 @@ Global
 		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Debug|x64.Build.0 = Debug|Any CPU
 		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Debug|x86.Build.0 = Debug|Any CPU
 		{29AA4BC0-63E5-4B50-91DD-E52715A81495}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -135,7 +138,6 @@ Global
 		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Debug|x64.Build.0 = Debug|Any CPU
 		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Debug|x86.Build.0 = Debug|Any CPU
 		{A62C705E-3C13-4481-9EFD-BF910E5E733E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -159,7 +161,6 @@ Global
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Debug|x64.Build.0 = Debug|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Debug|x86.Build.0 = Debug|Any CPU
 		{C7375EEC-FE83-4B7C-B754-BD7B93A78475}.Release|Any CPU.ActiveCfg = Release|Any CPU
