@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using inv = InvoiceService;
+using Microsoft.Extensions.Configuration;
+using Microsoft.ServiceFabric.Services.Runtime;
 using Pitstop.Infrastructure.Messaging;
 using Pitstop.InvoiceService.CommunicationChannels;
 using Pitstop.InvoiceService.Repositories;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 
@@ -15,7 +18,7 @@ namespace Pitstop.InvoiceService
 
         static Program()
         {
-            _env = Environment.GetEnvironmentVariable("PITSTOP_ENVIRONMENT") ?? "Production";
+            _env = Environment.GetEnvironmentVariable("SERVICE_ENVIRONMENT") ?? "Production";
 
             Console.WriteLine($"Environment: {_env}");
 
@@ -28,40 +31,41 @@ namespace Pitstop.InvoiceService
 
         static void Main(string[] args)
         {
-            // get configuration
-            var configSection = Config.GetSection("RabbitMQ");
-            string host = configSection["Host"];
-            string userName = configSection["UserName"];
-            string password = configSection["Password"];
-
-            var sqlConnectionString = Config.GetConnectionString("InvoiceServiceCN");
-
-            var mailConfigSection = Config.GetSection("Email");
-            string mailHost = mailConfigSection["Host"];
-            int mailPort = Convert.ToInt32(mailConfigSection["Port"]);
-            string mailUserName = mailConfigSection["User"];
-            string mailPassword = mailConfigSection["Pwd"];
-
-            // start invoice manager
-            RabbitMQMessageHandler messageHandler = new RabbitMQMessageHandler(host, userName, password, "Pitstop", "Invoicing", "");
-            IInvoiceRepository repo = new SqlServerInvoiceRepository(sqlConnectionString);
-            IEmailCommunicator emailCommunicator = new SMTPEmailCommunicator(mailHost, mailPort, mailUserName, mailPassword);
-            InvoiceManager manager = new InvoiceManager(messageHandler, repo, emailCommunicator);
-            manager.Start();
-
-            if (_env == "Development")
+            try
             {
-                Console.WriteLine("Invoicing service started. Press any key to stop...");
-                Console.ReadKey(true);
-                manager.Stop();
+                ServiceRuntime.RegisterServiceAsync("InvoiceServiceType",
+                        context => new inv.InvoiceService(context)).GetAwaiter().GetResult();
+
+                inv.ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(inv.InvoiceService).Name);
+
+                // get configuration
+                var configSection = Config.GetSection("RabbitMQ");
+                string host = configSection["Host"];
+                string userName = configSection["UserName"];
+                string password = configSection["Password"];
+
+                var sqlConnectionString = Config.GetConnectionString("InvoiceServiceCN");
+
+                var mailConfigSection = Config.GetSection("Email");
+                string mailHost = mailConfigSection["Host"];
+                int mailPort = Convert.ToInt32(mailConfigSection["Port"]);
+                string mailUserName = mailConfigSection["User"];
+                string mailPassword = mailConfigSection["Pwd"];
+
+                // start invoice manager
+                var messageHandler = new RabbitMQMessageHandler(host, userName, password, "Pitstop", "Invoicing", "");
+                IInvoiceRepository repo = new SqlServerInvoiceRepository(sqlConnectionString);
+                IEmailCommunicator emailCommunicator = new SMTPEmailCommunicator(mailHost, mailPort, mailUserName, mailPassword);
+                var manager = new InvoiceManager(messageHandler, repo, emailCommunicator);
+                manager.Start();
+
+                // Prevents this host process from terminating so services keep running.
+                Thread.Sleep(Timeout.Infinite);
             }
-            else
+            catch (Exception e)
             {
-                Console.WriteLine("Invoicing service started.");
-                while (true)
-                {
-                    Thread.Sleep(10000);
-                }
+                inv.ServiceEventSource.Current.ServiceHostInitializationFailed(e.ToString());
+                throw;
             }
         }
     }

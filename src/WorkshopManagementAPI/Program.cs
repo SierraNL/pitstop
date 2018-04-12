@@ -19,7 +19,7 @@ namespace Pitstop.WorkshopManagementAPI
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
 
-                ServiceRuntime.RegisterServiceAsync("WorkshopManagementAPI",
+                ServiceRuntime.RegisterServiceAsync("WorkshopManagementAPIType",
                     context => new WorkshopManagementAPI(context)).GetAwaiter().GetResult();
 
                 ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(WorkshopManagementAPI).Name);

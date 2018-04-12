@@ -4,13 +4,7 @@
     <Parameter Name="SqlServer_InstanceCount" Value="1" />
     <Parameter Name="RabbitMQ_InstanceCount" Value="1" />
     <Parameter Name="WebApp_InstanceCount" Value="1" />
-    <Parameter Name="AuditlogService_InstanceCount" Value="1" />
     <Parameter Name="CustomerManagementAPI_InstanceCount" Value="1" />
-    <Parameter Name="InvoiceService_InstanceCount" Value="1" />
-    <Parameter Name="NotificationService_InstanceCount" Value="1" />
-    <Parameter Name="TimeService_InstanceCount" Value="1" />
-    <Parameter Name="VehicleManagementAPI_InstanceCount" Value="1" />
-    <Parameter Name="WorkshopManagementAPI_InstanceCount" Value="1" />
-    <Parameter Name="WorkshopManagementEventHandler_InstanceCount" Value="1" />
+    <Parameter Name="Environment" Value="Development" />
   </Parameters>
 </Application>

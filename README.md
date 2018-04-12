@@ -2,6 +2,13 @@
 I'm currently reading up on Azure Service Fabric and how to build a Microservices solution using RabbitMQ and MassTransit sagas into it.
 EdwinVW's case has all the required logic build, but the difference in my approach is switching from Docker and Docker Compose to Azure Service Fabric and add MassTransit in the mix primairily to be able to do sagas.
 
+# Current state
+First I'm working on getting the application running in Azure Service Fabric (6.1), at first I wanted to target Linux, but in the current version of service fabric (6.1), that's not possible since you can't use .net core 2.0 on linux SF yet.
+Running it on Windows also requires Windows guest containers for SQL-Server (not a problem) but also for RabbitMQ, for which there is no official docker image available. So currently I'm using this one: https://hub.docker.com/r/micdenny/rabbitmq-windows/
+
+Running on a Windows 10 development machine also gives some issues, since you can't use Docker CE for the guest windows images in the current version of the service framework.
+So for development I use containers seperate from SF for RabbitMQ and SQL-Server (I use the linux ones on docker CE)
+
 # Pitstop - Garage Management System
 This repo contains a sample application based on a Garage Management System for PitStop - a fictitious garage. The application targets the employees of PitStop and supports their daily tasks. It should offer the following functionality:
 

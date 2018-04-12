@@ -38,6 +38,9 @@
   <ItemGroup>
     <ProjectReference Include="..\AuditlogService\AuditlogService.csproj" />
     <ProjectReference Include="..\CustomerManagementAPI\CustomerManagementAPI.csproj" />
+    <ProjectReference Include="..\InvoiceService\InvoiceService.csproj" />
+    <ProjectReference Include="..\NotificationService\NotificationService.csproj" />
+    <ProjectReference Include="..\TimeService\TimeService.csproj" />
     <ProjectReference Include="..\VehicleManagementAPI\VehicleManagementAPI.csproj" />
     <ProjectReference Include="..\WebApp\WebApp.csproj" />
     <ProjectReference Include="..\WorkshopManagementAPI\WorkshopManagementAPI.csproj" />
